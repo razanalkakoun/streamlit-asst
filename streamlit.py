@@ -179,3 +179,30 @@ st.write("In this representation, the ticket classes (1st, 2nd, and 3rd) are vis
 # plt.figure(figsize=(10, 6))
 # sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", linewidths=.5)
 # st.pyplot()
+
+
+# Create an interactive Survival Bar Chart
+st.subheader("Interactive Survival Bar Chart")
+
+# Add a selection box for choosing the feature
+selected_feature = st.selectbox("Select a Feature", ["pclass", "sex", "age", "sibsp", "embarked"])
+
+# Define age groups
+age_groups = ["0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80"]
+
+# Filter the data based on the selected feature
+if selected_feature == "age":
+    age_group = st.selectbox("Select Age Group", age_groups)
+    age_min, age_max = map(int, age_group.split("-"))
+    filtered_data = data[(data['age'] >= age_min) & (data['age'] <= age_max)]
+else:
+    filtered_data = data
+
+# Create a bar chart to visualize survival by the selected feature
+fig_survival_by_feature = px.bar(filtered_data, x=selected_feature, color="survived",
+                                 title=f"Survival Distribution by {selected_feature}")
+fig_survival_by_feature.update_layout(xaxis=dict(type='category'))
+
+# Show the bar chart
+st.plotly_chart(fig_survival_by_feature)
+st.write("Through an easy-to-use interface, we can delve into various factors affecting passenger survival, including passenger class, gender, age, the number of siblings or spouses onboard, and the port of embarkation. The visualization provides insights into how these features influence the likelihood of survival, allowing for a deeper understanding of the Titanic's tragic journey.")
